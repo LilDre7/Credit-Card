@@ -1,20 +1,31 @@
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 
 const Cart = () => {
-  const [cardName, setCardName] = useState("");
   const [cardSeguro, setCardSeguro] = useState("");
   const [name, setName] = useState("");
   const [numberCard, setCardNumber] = useState("");
   const [dateCard, setDateCard] = useState("");
   const [dateCardOne, setDateCardOne] = useState("");
   const [formSubmit, setFormSubmit] = useState(true);
+  const [error, setError] = useState(false);
 
+  let number = "0000 0000 0000 0000";
+  let result = number.replace(/\d{4}(?=\d)/g, "$& ");
+
+  // Submit boton
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setFormSubmit(false);
   };
 
+  // Validacion del CVC
   const handleInputSeguro = (e) => {
     const value = e.target.value;
     setCardSeguro(value);
@@ -25,24 +36,31 @@ const Cart = () => {
     }
   };
 
+  // Validacion del Nombre
   const handleInputName = (e) => {
     const value = e.target.value;
     setName(value);
-    if (value.length > 25) {
-      alert("No debe pasar el limite de 25 caracteres");
-      setName("");
-    }
+
+    if (value.length > 24) alert("No debe pasar el limite de 20 caracteres");
+
+    if (value.length > 26) setName("");
   };
+
+  // Validacion del Numero de tarjeta
 
   const handleInputNumberCard = (e) => {
-    const value = e.target.value;
-    setCardNumber(value);
+    const value = e.target.value.trim();
+    setError(!!isNaN(value));
+    const result = value.replace(/\d{4}(?=\d)/g, "$& ");
 
-    if (value.length > 16) {
-      alert("No debe de tener mas de 16 caracteres");
-    }
+    setCardNumber(result);
+
+    if (value.length > 19) alert("No debe de tener mas de 19 caracteres");
+
+    if (value.length > 22) setCardNumber("");
   };
 
+  // Datos de la tarjeta
   const handleDateCard = (e) => {
     const value = e.target.value;
     setDateCard(value);
@@ -52,7 +70,7 @@ const Cart = () => {
       setDateCard("");
     }
   };
-
+  // Datos de la tarjeta
   const handleDateCardOne = (e) => {
     const value = e.target.value;
     setDateCardOne(value);
@@ -103,7 +121,7 @@ const Cart = () => {
 
           <div className="absolute top-[76px] z-10 left-7 desktop:left-[77px] desktop:top-[95px] ">
             <p className="text-white font-semibold text-[24px]">
-              {numberCard.slice(0, 16) || "0000 0000 0000 0000"}
+              {numberCard.slice(0, 20) || result}
             </p>
           </div>
 
@@ -141,6 +159,17 @@ const Cart = () => {
                 minLength={3}
               />
 
+              <span>
+                {name.length < 24 ? (
+                  ""
+                ) : (
+                  <Alert maxWidth="sm" status="error">
+                    <AlertIcon />
+                    <AlertTitle>Debes tener mas de 20 caracteres!</AlertTitle>
+                  </Alert>
+                )}
+              </span>
+
               <label className="">💳 CARD NUMBER</label>
               <input
                 className="border-2 border-black  p-2 rounded-md text-lg"
@@ -150,6 +179,15 @@ const Cart = () => {
                 onChange={handleInputNumberCard}
                 required
               />
+
+              {error !== false ? (
+                <Alert maxWidth="sm" status="error">
+                  <AlertIcon />
+                  <AlertTitle>Solo se permiten numeros</AlertTitle>
+                </Alert>
+              ) : (
+                ""
+              )}
             </div>
 
             <div className="">
@@ -200,16 +238,18 @@ const Cart = () => {
           </form>
         ) : (
           <section className="absolute ">
-            <div className="relative top-48 w-full flex justify-center flex-col items-center gap-2 rounded-full animate-bounce">
+            <div className="relative top-60 w-full flex justify-center flex-col items-center gap-2 rounded-full animate-bounce desktop:left-[20rem] desktop:top-[22rem] ">
               <div>
                 <img src="/public/images/icon-complete.svg" alt="" />
               </div>
 
-              <div className="text-center bg-black text-white ">
-                <h3>Thank you for your purchase!</h3>
-                <p>We appreciate your business</p>
+              <div className="text-center p-3 ">
+                <div className="p-3">
+                  <h3>Thank you for your purchase!</h3>
+                  <p>We appreciate your business</p>
+                </div>
                 <button
-                  className="w-full h-[50px] bg-black text-white rounded-md text-xl text-center hover:bg-white hover:text-black transition-all duration-300 shadow-lg shadow-red-400 p-3 "
+                  className="w-full h-[50px] bg-black text-white rounded-md text-xl text-center hover:bg-white hover:text-black transition-all duration-300 shadow-lg shadow-red-400 "
                   type="submit"
                 >
                   🎉 Continue Shopping
