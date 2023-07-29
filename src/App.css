@@ -1,0 +1,33 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  min-height: 100vh;
+}
+
+.container-card {
+  height: 220px;
+  width: 100%;
+  background: url(/public/images/bg-main-mobile.png);
+  display: flex;
+  background-size: cover;
+  justify-content: center;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 1000px) {
+  .container {
+    min-height: 100%;
+  }
+  .container-card {
+    max-width: 400px;
+    height: 100vh;
+  }
+}
